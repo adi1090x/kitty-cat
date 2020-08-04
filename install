@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+## Author  : Aditya Shakya
+## Twitter : @adi1090x
+## Github  : @adi1090x
+## Reddit  : @adi1090x
+
+## Kitty-cat installer script
+
+## ANSI Colors (FG & BG)
+RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"  ORANGE="$(printf '\033[33m')"  BLUE="$(printf '\033[34m')"
+MAGENTA="$(printf '\033[35m')"  CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')" BLACK="$(printf '\033[30m')"
+REDBG="$(printf '\033[41m')"  GREENBG="$(printf '\033[42m')"  ORANGEBG="$(printf '\033[43m')"  BLUEBG="$(printf '\033[44m')"
+MAGENTABG="$(printf '\033[45m')"  CYANBG="$(printf '\033[46m')"  WHITEBG="$(printf '\033[47m')" BLACKBG="$(printf '\033[40m')"
+DEFAULT_FG="$(printf '\033[39m')"  DEFAULT_BG="$(printf '\033[49m')"
+
+## Directories
+DIR="$(pwd)"
+KITTY_DIR="$HOME/.config/kitty"
+
+## Banner
+banner () {
+    clear
+    echo "
+    ${BLUE}/\___/\ 			          
+    ${BLUE}\ -.- / ${RED} ┃ ┃┛━┏┛━┏┛┃ ┃ ${GREEN} ┏━┛┏━┃━┏┛  
+    ${BLUE}'-.^.-' ${RED} ┏┛ ┃ ┃  ┃ ━┏┛ ${GREEN} ┃  ┏━┃ ┃   
+    ${BLUE}  /'\   ${RED} ┛ ┛┛ ┛  ┛  ┛  ${GREEN} ━━┛┛ ┛ ┛   
+
+    ${BLUE}[${RED}*${BLUE}] ${ORANGE}By- Aditya Shakya ${RED}//${ORANGE} adi1090x"
+}
+
+## Script Termination
+exit_on_signal_SIGINT () {
+    { printf "\n\n%s\n" "    ${BLUE}[${RED}*${BLUE}] ${RED}Script interrupted." 2>&1; echo; reset_color; }
+    exit 0
+}
+
+exit_on_signal_SIGTERM () {
+    { printf "\n\n%s\n" "    ${BLUE}[${RED}*${BLUE}] ${RED}Script terminated." 2>&1; echo; reset_color; }
+    exit 0
+}
+
+trap exit_on_signal_SIGINT SIGINT
+trap exit_on_signal_SIGTERM SIGTERM
+
+## Reset terminal colors
+reset_color() {
+	tput sgr0   # reset attributes
+	tput op     # reset color
+    return
+}
+
+## Prerequisite
+prerequisite() {
+    dependencies=(kitty sed wget)
+    for dependency in "${dependencies[@]}"; do
+        type -p "$dependency" &>/dev/null || {
+			banner
+            { echo; echo "    ${BLUE}[${RED}!${BLUE}] ${RED}ERROR: Could not find ${MAGENTA}'${dependency}'${RED}, is it installed?" >&2; echo; }
+            { reset_color; exit 1; }
+        }
+    done
+}
+
+## Check for previous installation
+check_prev () {
+	banner
+	if [[ (-L /usr/bin/kitty-cat) && (-d /usr/share/kitty-cat) ]]; then
+		{ echo; echo "    ${BLUE}[${RED}!${BLUE}] ${MAGENTA}kitty-cat ${GREEN}is already installed."; }
+		{ read -p "    ${BLUE}[${RED}?${BLUE}] ${ORANGE}Do you wanna re-install it? (y/n): ${GREEN}"; echo; }
+		if [[ "$REPLY" =~ ^[y/Y]$ ]]; then
+			install_kcat
+		else
+			{ reset_color; exit; }
+		fi
+	else
+		{ echo; install_kcat; }
+	fi
+}
+
+## Install kitty-cat
+install_kcat () {
+	echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Installing kitty-cat..."
+	# Delete old files
+	if [[ (-L /usr/bin/kitty-cat) && (-d /usr/share/kitty-cat) ]]; then
+		echo "    ${BLUE}[${RED}*${BLUE}] ${RED}Deleting files from previous installation..."${BLUE}
+		{ printf "    "; sudo rm -r /usr/bin/kitty-cat /usr/share/kitty-cat /usr/share/fonts/kitty-cat; echo; }
+	fi
+	# Kitty config dir
+	if [[ ! -d $KITTY_DIR ]]; then
+		mkdir $KITTY_DIR
+	fi
+	# User Config
+	if [[ -f $KITTY_DIR/kitty.conf ]]; then
+		mv $KITTY_DIR/kitty.conf{,.user}
+	fi
+	# Copy new config
+	cp $DIR/kitty.conf $KITTY_DIR
+	# Coping files
+	{ echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Coping files in '/usr/share' directory..."${BLUE}; }
+	{ printf "    "; sudo mkdir /usr/share/kitty-cat; sudo mkdir /usr/share/fonts/kitty-cat; }
+	{ sudo cp -r $DIR/colors /usr/share/kitty-cat/; sudo cp -r $DIR/fonts/* /usr/share/fonts/kitty-cat/; sudo cp -r $DIR/kcat /usr/share/kitty-cat/; }
+	{ sudo chmod +x /usr/share/kitty-cat/kcat; sudo fc-cache; sudo ln -s /usr/share/kitty-cat/kcat /usr/bin/kitty-cat; }
+
+	# Verify files 
+	if [[ (-L /usr/bin/kitty-cat) && (-d /usr/share/kitty-cat) ]]; then
+		{ echo; echo "    ${BLUE}[${RED}*${BLUE}] ${GREEN}Successfully Installed."; }
+		{ echo "    ${BLUE}[${RED}*${BLUE}] ${GREEN}Now You Can Run This Program By Just typing ${MAGENTA}kitty-cat${GREEN}."; echo; }
+		{ reset_color; exit 0; }
+	else
+		{ echo "    ${BLUE}[${RED}!${BLUE}] ${RED}Error Occured."; echo; reset_color; exit 1; }
+	fi
+}
+
+## Main
+main () {
+	prerequisite
+	check_prev
+}
+
+main
