@@ -99,7 +99,7 @@ install_kcat () {
 	cp $DIR/kitty.conf $KITTY_DIR
 	# Copying files
 	{ echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Copying files to '/usr/local/share' directory..."${BLUE}; }
-	{ printf "    "; sudo mkdir /usr/local/share/kitty-cat; sudo mkdir /usr/local/share/fonts/kitty-cat; }
+	{ printf "    "; sudo mkdir /usr/local/share/kitty-cat; sudo mkdir -p /usr/local/share/fonts/kitty-cat; }
 	{ sudo cp -r $DIR/colors /usr/local/share/kitty-cat/; sudo cp -r $DIR/fonts/* /usr/local/share/fonts/kitty-cat/; sudo cp -r $DIR/kcat /usr/local/share/kitty-cat/; }
 	{ sudo chmod +x /usr/local/share/kitty-cat/kcat; sudo fc-cache; sudo ln -s /usr/local/share/kitty-cat/kcat /usr/local/bin/kitty-cat; }
 
