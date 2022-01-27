@@ -68,7 +68,7 @@ check_prev () {
 	banner
 	if [[ (-L /usr/bin/kitty-cat) && (-d /usr/share/kitty-cat) ]]; then
 		{ echo; echo "    ${BLUE}[${RED}!${BLUE}] ${MAGENTA}kitty-cat ${GREEN}is already installed."; }
-		{ read -p "    ${BLUE}[${RED}?${BLUE}] ${ORANGE}Do you wanna re-install it? (y/n): ${GREEN}"; echo; }
+		{ read -p "    ${BLUE}[${RED}?${BLUE}] ${ORANGE}Do you wanna reinstall it? (y/n): ${GREEN}"; echo; }
 		if [[ "$REPLY" =~ ^[y/Y]$ ]]; then
 			install_kcat
 		else
@@ -97,8 +97,8 @@ install_kcat () {
 	fi
 	# Copy new config
 	cp $DIR/kitty.conf $KITTY_DIR
-	# Coping files
-	{ echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Coping files in '/usr/share' directory..."${BLUE}; }
+	# Copying files
+	{ echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Copying files to '/usr/share' directory..."${BLUE}; }
 	{ printf "    "; sudo mkdir /usr/share/kitty-cat; sudo mkdir /usr/share/fonts/kitty-cat; }
 	{ sudo cp -r $DIR/colors /usr/share/kitty-cat/; sudo cp -r $DIR/fonts/* /usr/share/fonts/kitty-cat/; sudo cp -r $DIR/kcat /usr/share/kitty-cat/; }
 	{ sudo chmod +x /usr/share/kitty-cat/kcat; sudo fc-cache; sudo ln -s /usr/share/kitty-cat/kcat /usr/bin/kitty-cat; }
