@@ -137,8 +137,9 @@ apply_fonts () {
 
 ## Random style
 random_style () {
-    echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Setting Random Style..."
     random_scheme=$(ls $COLORS_DIR | shuf -n 1)
+    echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Setting Random Style:"
+    echo "    ${BLUE}[${RED}+${BLUE}] ${ORANGE}${random_scheme}"
     { cat $COLORS_DIR/$random_scheme > $KITTY_DIR/colors.conf; }
     { reload_settings; reset_color; exit; }
 }
