@@ -16,8 +16,8 @@ DEFAULT_FG="$(printf '\033[39m')"  DEFAULT_BG="$(printf '\033[49m')"
 
 ## Directories
 KITTY_DIR="$HOME/.config/kitty"
-COLORS_DIR='/usr/share/kitty-cat/colors'
-FONTS_DIR='/usr/share/fonts/kitty-cat'
+COLORS_DIR='/usr/local/share/kitty-cat/colors'
+FONTS_DIR='/usr/local/share/fonts/kitty-cat'
 
 ## Banner
 banner () {
