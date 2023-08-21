@@ -50,12 +50,12 @@ reset_color() {
 ## Check for previous installation
 uninstall_tstyle () {
 	banner
-	if [[ (-L /usr/bin/kitty-cat) && (-d /usr/share/kitty-cat) ]]; then
+	if [[ (-L /usr/local/bin/kitty-cat) && (-d /usr/local/share/kitty-cat) ]]; then
 		{ echo; echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Uninstalling kitty-cat..."; echo; }
-		{ echo "    ${BLUE}[${RED}*${BLUE}] ${RED}Removing files from '/usr/share' dir."${BLUE}; }
-		{ printf "    "; sudo rm -r /usr/share/kitty-cat /usr/share/fonts/kitty-cat /usr/bin/kitty-cat; sudo fc-cache; }
+		{ echo "    ${BLUE}[${RED}*${BLUE}] ${RED}Removing files from '/usr/local/share' dir."${BLUE}; }
+		{ printf "    "; sudo rm -r /usr/local/share/kitty-cat /usr/local/share/fonts/kitty-cat /usr/local/bin/kitty-cat; sudo fc-cache; }
 		# Verify files
-		if [[ (! -L /usr/bin/kitty-cat) && (! -d /usr/share/kitty-cat) ]]; then
+		if [[ (! -L /usr/local/bin/kitty-cat) && (! -d /usr/local/share/kitty-cat) ]]; then
 			{ echo; echo "    ${BLUE}[${RED}*${BLUE}] ${GREEN}Uninstalled Successfully."; echo; }
 			{ reset_color; exit 0; }
 		else
